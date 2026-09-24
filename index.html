@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Exposure | Conscientização em Cibersegurança</title>
+    <meta name="description" content="Site educacional sobre exposição de dados pessoais na internet. Todos os dados são fictícios e simulados.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --bg-glass: rgba(15, 23, 42, 0.6);
+            --neon-green: #00ff9d;
+            --neon-blue: #00d4ff;
+            --neon-cyan: #22d3ee;
+            --neon-red: #ff3e6c;
+            --neon-orange: #ff9f43;
+            --neon-yellow: #facc15;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 255, 157, 0.15);
+            --shadow-neon: 0 0 20px rgba(0, 255, 157, 0.15);
+            --shadow-blue: 0 0 20px rgba(0, 212, 255, 0.15);
+            --gradient-primary: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+            --gradient-danger: linear-gradient(135deg, #ff3e6c 0%, #ff9f43 100%);
+            --font-display: 'Orbitron', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 157, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 157, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            filter: blur(120px); opacity: 0.15; pointer-events: none; z-index: 0;
+        }
+        .bg-glow-1 { top: -200px; left: -200px; background: var(--neon-green); }
+        .bg-glow-2 { bottom: -200px; right: -200px; background: var(--neon-blue); }
+
+        /* ========== LOGIN SCREEN ========== */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            padding: 1.5rem;
+        }
+
+        #loginScreen.hidden { display: none; }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-neon);
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo .logo-icon {
+            width: 56px; height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #0a0e17;
+            box-shadow: var(--shadow-neon);
+            margin-bottom: 1rem;
+        }
+
+        .login-logo h1 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-logo p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.75rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 0.3rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.65rem;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+        }
+
+        .auth-tab.active {
+            background: rgba(0, 255, 157, 0.15);
+            color: var(--neon-green);
+        }
+
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+
+        .form-group { margin-bottom: 1.15rem; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.1);
+        }
+
+        .form-group input::placeholder { color: var(--text-muted); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.9rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #0a0e17;
+            box-shadow: 0 4px 20px rgba(0, 255, 157, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 255, 157, 0.45);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .btn-full { width: 100%; }
+
+        .auth-error {
+            background: rgba(255, 62, 108, 0.12);
+            border: 1px solid rgba(255, 62, 108, 0.3);
+            color: #fca5a5;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .auth-error.show { display: block; }
+
+        .auth-success {
+            background: rgba(0, 255, 157, 0.12);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: #6ee7b7;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .auth-success.show { display: block; }
+
+        .login-disclaimer {
+            margin-top: 1.5rem;
+            padding: 0.85rem;
+            background: rgba(255, 62, 108, 0.08);
+            border: 1px solid rgba(255, 62, 108, 0.2);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #fca5a5;
+            text-align: center;
+            line-height: 1.45;
+        }
+
+        /* ========== MAIN APP ========== */
+        #mainApp { display: none; }
+        #mainApp.visible { display: block; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .logo {
+            display: flex; align-items: center; gap: 0.75rem;
+            text-decoration: none; color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: #0a0e17;
+            box-shadow: var(--shadow-neon);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 1.25rem; letter-spacing: 1px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex; gap: 0.5rem; list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem; font-weight: 500;
+            padding: 0.5rem 0.9rem; border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--neon-green);
+            background: rgba(0, 255, 157, 0.08);
+        }
+
+        .nav-user {
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+
+        .nav-user span {
+            font-size: 0.85rem; color: var(--text-secondary);
+            max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid rgba(255, 62, 108, 0.4);
+            color: #fca5a5;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 62, 108, 0.15);
+            border-color: var(--neon-red);
+        }
+
+        .nav-toggle {
+            display: none; background: none; border: none;
+            color: var(--text-primary); font-size: 1.5rem; cursor: pointer;
+        }
+
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 6rem 1.5rem 4rem; z-index: 1;
+        }
+
+        .hero-content { max-width: 900px; text-align: center; }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--neon-green);
+            font-size: 0.8rem; font-weight: 600;
+            padding: 0.4rem 1rem; border-radius: 50px;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-mono); letter-spacing: 1px;
+        }
+
+        .hero-badge i { font-size: 0.7rem; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700; line-height: 1.15;
+            margin-bottom: 1.25rem; letter-spacing: 2px;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem; color: var(--text-secondary);
+            margin-bottom: 2rem; max-width: 600px;
+            margin-left: auto; margin-right: auto;
+        }
+
+        .hero-disclaimer {
+            margin-top: 2.5rem; padding: 1rem 1.5rem;
+            background: rgba(255, 62, 108, 0.08);
+            border: 1px solid rgba(255, 62, 108, 0.25);
+            border-radius: 12px; color: #fca5a5;
+            font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 0.75rem;
+            max-width: 550px;
+        }
+
+        .hero-disclaimer i { font-size: 1.2rem; flex-shrink: 0; }
+
+        .terminal-deco {
+            margin-top: 3rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            border-radius: 12px; overflow: hidden;
+            max-width: 500px; margin-left: auto; margin-right: auto;
+            text-align: left; font-family: var(--font-mono); font-size: 0.85rem;
+            box-shadow: var(--shadow-neon);
+        }
+
+        .terminal-header {
+            background: rgba(0, 255, 157, 0.08);
+            padding: 0.5rem 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            border-bottom: 1px solid rgba(0, 255, 157, 0.15);
+        }
+
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27c93f; }
+
+        .terminal-body { padding: 1rem 1.25rem; color: var(--neon-green); }
+
+        .terminal-line {
+            margin-bottom: 0.35rem; opacity: 0;
+            animation: typeIn 0.3s ease forwards;
+        }
+        .terminal-line:nth-child(1) { animation-delay: 0.5s; }
+        .terminal-line:nth-child(2) { animation-delay: 1s; }
+        .terminal-line:nth-child(3) { animation-delay: 1.5s; }
+        .terminal-line:nth-child(4) { animation-delay: 2s; }
+
+        @keyframes typeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cursor {
+            display: inline-block; width: 8px; height: 14px;
+            background: var(--neon-green); animation: blink 1s infinite;
+            vertical-align: middle; margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        section { position: relative; padding: 5rem 1.5rem; z-index: 1; }
+        .section-container { max-width: 1200px; margin: 0 auto; }
+
+        .section-header { text-align: center; margin-bottom: 3rem; }
+
+        .section-tag {
+            display: inline-block;
+            font-family: var(--font-mono); font-size: 0.75rem;
+            color: var(--neon-blue); letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 0.75rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700; margin-bottom: 0.75rem; letter-spacing: 1px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary); max-width: 600px;
+            margin: 0 auto; font-size: 1.05rem;
+        }
+
+        .card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 255, 157, 0.3);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem; margin-top: 1.5rem;
+        }
+
+        .result-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            border-radius: 12px; padding: 1.25rem;
+        }
+
+        .result-item .label {
+            font-size: 0.75rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;
+        }
+
+        .result-item .value { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); }
+        .result-item .value.sim { color: var(--neon-yellow); font-family: var(--font-mono); font-size: 0.9rem; }
+
+        .badge {
+            display: inline-block; padding: 0.25rem 0.75rem;
+            border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+
+        .badge-low { background: rgba(0, 255, 157, 0.15); color: var(--neon-green); }
+        .badge-med { background: rgba(250, 204, 21, 0.15); color: var(--neon-yellow); }
+        .badge-high { background: rgba(255, 62, 108, 0.15); color: var(--neon-red); }
+
+        .alert {
+            padding: 1rem 1.25rem; border-radius: 12px;
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            margin-bottom: 1.5rem; font-size: 0.9rem;
+        }
+
+        .alert-warning { background: rgba(255, 159, 67, 0.1); border: 1px solid rgba(255, 159, 67, 0.3); color: #fdba74; }
+        .alert-danger { background: rgba(255, 62, 108, 0.1); border: 1px solid rgba(255, 62, 108, 0.3); color: #fca5a5; }
+        .alert-info { background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); color: #7dd3fc; }
+        .alert i { font-size: 1.1rem; margin-top: 0.1rem; flex-shrink: 0; }
+
+        .consulta-grid {
+            display: grid; grid-template-columns: 1fr 1.2fr;
+            gap: 2rem; align-items: start;
+        }
+
+        @media (max-width: 900px) { .consulta-grid { grid-template-columns: 1fr; } }
+
+        .cpf-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        @media (max-width: 800px) { .cpf-demo { grid-template-columns: 1fr; } }
+
+        .fake-profile { display: flex; flex-direction: column; gap: 1rem; }
+
+        .fake-profile-header {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;
+        }
+
+        .fake-avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: #0a0e17; font-weight: 700;
+        }
+
+        .leaks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .leak-card { position: relative; overflow: hidden; }
+        .leak-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; background: var(--gradient-danger);
+        }
+
+        .leak-platform {
+            font-family: var(--font-display); font-size: 1.1rem;
+            font-weight: 600; margin-bottom: 0.5rem; color: var(--neon-red);
+        }
+
+        .leak-meta {
+            display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0;
+        }
+
+        .leak-meta span {
+            font-size: 0.8rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 0.35rem;
+        }
+
+        .leak-consequences {
+            background: rgba(255, 62, 108, 0.08); border-radius: 8px;
+            padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.85rem; color: #fca5a5;
+        }
+
+        .leak-protect {
+            background: rgba(0, 255, 157, 0.08); border-radius: 8px;
+            padding: 0.75rem 1rem; font-size: 0.85rem; color: #6ee7b7;
+        }
+
+        .ddos-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        @media (max-width: 900px) { .ddos-container { grid-template-columns: 1fr; } }
+
+        .ddos-viz {
+            background: rgba(0, 0, 0, 0.4); border-radius: 16px;
+            padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.15);
+            min-height: 320px; position: relative; overflow: hidden;
+        }
+
+        .ddos-status {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .status-badge {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--neon-green);
+        }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--neon-green); animation: pulse 1.5s infinite;
+        }
+
+        .ddos-controls { display: flex; flex-direction: column; gap: 1.25rem; }
+
+        .control-group label {
+            display: flex; justify-content: space-between;
+            font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%; -webkit-appearance: none; height: 6px;
+            background: rgba(0, 255, 157, 0.15); border-radius: 3px; outline: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px;
+            background: var(--neon-green); border-radius: 50%; cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .server-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px; padding: 1.25rem; text-align: center; margin-top: 1rem;
+        }
+
+        .server-box .server-icon {
+            font-size: 2.5rem; color: var(--neon-blue);
+            margin-bottom: 0.5rem; transition: all 0.3s ease;
+        }
+
+        .server-box.overloaded .server-icon {
+            color: var(--neon-red); animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .server-load-bar {
+            height: 8px; background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px; overflow: hidden; margin-top: 0.75rem;
+        }
+
+        .server-load-fill {
+            height: 100%; background: var(--gradient-primary);
+            border-radius: 4px; transition: width 0.3s ease, background 0.3s ease; width: 10%;
+        }
+
+        .server-box.overloaded .server-load-fill { background: var(--gradient-danger); }
+
+        .score-container {
+            display: grid; grid-template-columns: 300px 1fr;
+            gap: 2.5rem; align-items: center;
+        }
+
+        @media (max-width: 800px) { .score-container { grid-template-columns: 1fr; } }
+
+        .score-circle-wrap {
+            position: relative; width: 260px; height: 260px; margin: 0 auto;
+        }
+
+        .score-circle-wrap canvas { width: 100% !important; height: 100% !important; }
+
+        .score-value {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center;
+        }
+
+        .score-value .number {
+            font-family: var(--font-display); font-size: 3rem;
+            font-weight: 700; line-height: 1;
+        }
+
+        .score-value .label {
+            font-size: 0.8rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem;
+        }
+
+        .score-bars { display: flex; flex-direction: column; gap: 1.25rem; }
+
+        .score-bar-item {
+            display: grid; grid-template-columns: 140px 1fr 50px;
+            align-items: center; gap: 1rem;
+        }
+
+        .score-bar-item .name { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .score-bar-track {
+            height: 10px; background: rgba(255, 255, 255, 0.08);
+            border-radius: 5px; overflow: hidden;
+        }
+
+        .score-bar-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+        .score-bar-item .pct {
+            font-family: var(--font-mono); font-size: 0.85rem;
+            color: var(--text-muted); text-align: right;
+        }
+
+        .protect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .protect-card { display: flex; gap: 1rem; align-items: flex-start; }
+
+        .protect-icon {
+            width: 48px; height: 48px; min-width: 48px; border-radius: 12px;
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--neon-green);
+        }
+
+        .protect-card h4 { font-size: 1rem; margin-bottom: 0.35rem; }
+        .protect-card p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        .about-content { max-width: 800px; margin: 0 auto; text-align: center; }
+        .about-content p { color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 1.05rem; }
+
+        .about-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem; margin-top: 2.5rem; text-align: left;
+        }
+
+        footer {
+            position: relative; z-index: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--border-color);
+            padding: 2.5rem 1.5rem; text-align: center;
+        }
+
+        footer .footer-logo {
+            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 0.75rem;
+        }
+
+        footer p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem; }
+
+        footer .disclaimer {
+            margin-top: 1.25rem; padding-top: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fca5a5; font-size: 0.8rem;
+        }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.6s ease forwards; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none; position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(10, 14, 23, 0.98);
+                flex-direction: column; padding: 1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: block; }
+            .nav-user span { display: none; }
+        }
+
+        .chart-container { position: relative; height: 220px; width: 100%; }
+
+        .history-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .history-item {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(0,255,157,0.1);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 0.5rem;
+        }
+        .history-item .meta { font-size: 0.8rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+                <h1>CYBER EXPOSURE</h1>
+                <p>Ambiente educacional de cibersegurança</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Entrar</button>
+                <button class="auth-tab" data-tab="register">Criar conta</button>
+            </div>
+
+            <div id="authError" class="auth-error"></div>
+            <div id="authSuccess" class="auth-success"></div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="regName">Nome de exibição</label>
+                    <input type="text" id="regName" placeholder="Como quer ser chamado" required minlength="2">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">E-mail</label>
+                    <input type="email" id="regEmail" placeholder="seu@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Senha</label>
+                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Criar conta
+                </button>
+            </form>
+
+            <div class="login-disclaimer">
+                <strong>Projeto educacional.</strong> Não armazene dados pessoais reais nas simulações. O login serve apenas para salvar o histórico das suas análises fictícias.
+            </div>
+        </div>
+    </div>
+
+    <!-- APP PRINCIPAL -->
+    <div id="mainApp">
+        <nav>
+            <div class="nav-container">
+                <a href="#inicio" class="logo">
+                    <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+                    <span class="logo-text">CYBER EXPOSURE</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#consulta">Consulta</a></li>
+                    <li><a href="#cpf">CPF Demo</a></li>
+                    <li><a href="#vazamentos">Vazamentos</a></li>
+                    <li><a href="#ddos">DDoS</a></li>
+                    <li><a href="#score">Score</a></li>
+                    <li><a href="#proteger">Proteger</a></li>
+                    <li><a href="#historico">Histórico</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                </ul>
+                <div class="nav-user">
+                    <span id="userEmailDisplay">—</span>
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero" id="inicio">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-circle"></i>
+                    AMBIENTE EDUCACIONAL SEGURO
+                </div>
+                <h1>CYBER <span>EXPOSURE</span></h1>
+                <p class="hero-subtitle">Descubra quanto da sua informação pode estar exposta na internet — de forma 100% simulada e educativa.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consulta" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Iniciar análise
+                    </a>
+                    <a href="#sobre" class="btn btn-secondary">
+                        <i class="fas fa-info-circle"></i> Sobre o projeto
+                    </a>
+                </div>
+                <div class="hero-disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span><strong>Ambiente educacional</strong> — todos os dados apresentados são fictícios. Nenhuma consulta real é realizada.</span>
+                </div>
+
+                <div class="terminal-deco">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span style="margin-left: 0.5rem; color: var(--text-muted); font-size: 0.75rem;">cyber-exposure ~ simulação</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">> Inicializando ambiente seguro...</div>
+                        <div class="terminal-line">> Dados reais: BLOQUEADOS</div>
+                        <div class="terminal-line">> Modo: SIMULAÇÃO EDUCATIVA</div>
+                        <div class="terminal-line">> Status: PRONTO <span class="cursor"></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="consulta">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 01</span>
+                    <h2>Consulta de Exposição</h2>
+                    <p>Insira dados <strong>fictícios</strong> para visualizar uma simulação de como informações podem aparecer em vazamentos públicos.</p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Aviso importante:</strong> Utilize apenas dados de exemplo (ex: nome@exemplo.com, usuario_ficticio). Esta ferramenta <strong>não consulta</strong> nenhum banco de dados real.
+                    </div>
+                </div>
+
+                <div class="consulta-grid">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.25rem; font-size: 1.1rem;"><i class="fas fa-keyboard" style="color: var(--neon-green); margin-right: 0.5rem;"></i>Dados de Simulação</h3>
+                        <form id="consultaForm">
+                            <div class="form-group">
+                                <label for="nome">Nome de exemplo</label>
+                                <input type="text" id="nome" placeholder="Ex: Maria Exemplo" required>
+                                <div class="form-hint">Use um nome fictício</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail de exemplo</label>
+                                <input type="email" id="email" placeholder="Ex: maria.exemplo@email.com" required>
+                                <div class="form-hint">E-mail fictício apenas</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuario">Usuário / Nickname</label>
+                                <input type="text" id="usuario" placeholder="Ex: maria_exemplo22">
+                            </div>
+                            <div class="form-group">
+                                <label for="dominio">Domínio (opcional)</label>
+                                <input type="text" id="dominio" placeholder="Ex: empresa-ficticia.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-radar"></i> Executar simulação
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card" id="consultaResults" style="min-height: 400px;">
+                        <div id="resultsPlaceholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 350px; color: var(--text-muted);">
+                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <p>Preencha o formulário e clique em "Executar simulação"</p>
+                            <p style="font-size: 0.85rem; margin-top: 0.5rem;">Os resultados serão 100% fictícios</p>
+                        </div>
+                        <div id="resultsContent" class="hidden">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                                <h3 style="font-size: 1.1rem;"><i class="fas fa-chart-bar" style="color: var(--neon-blue); margin-right: 0.5rem;"></i>Resultados da Simulação</h3>
+                                <span class="badge" id="exposureBadge">—</span>
+                            </div>
+                            <div class="results-grid" id="resultsGrid"></div>
+                            <div class="alert alert-info" style="margin-top: 1.5rem; margin-bottom: 0;">
+                                <i class="fas fa-info-circle"></i>
+                                <div>Estes resultados são <strong>gerados localmente</strong> de forma aleatória. O histórico da simulação é salvo na sua conta.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cpf" style="background: rgba(0,0,0,0.25);">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 02</span>
+                    <h2>CPF — Demonstração</h2>
+                    <p>Veja como uma consulta indevida de documentos poderia expor dados pessoais. Use apenas CPF fictício.</p>
+                </div>
+
+                <div class="alert alert-danger">
+                    <i class="fas fa-ban"></i>
+                    <div>
+                        <strong>Não utilize documentos reais.</strong> Esta ferramenta existe apenas para demonstrar riscos de exposição de dados. O sistema rejeita formatos que parecem CPF real e só aceita exemplos como 000.000.000-00.
+                    </div>
+                </div>
+
+                <div class="cpf-demo">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.25rem; font-size: 1.1rem;"><i class="fas fa-id-card" style="color: var(--neon-orange); margin-right: 0.5rem;"></i>Consulta Fictícia de CPF</h3>
+                        <form id="cpfForm">
+                            <div class="form-group">
+                                <label for="cpfInput">CPF fictício</label>
+                                <input type="text" id="cpfInput" placeholder="000.000.000-00" maxlength="14" required>
+                                <div class="form-hint">Exemplo obrigatório: 000.000.000-00 ou similar fictício</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-search"></i> Simular consulta
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card" id="cpfResults">
+                        <div id="cpfPlaceholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; color: var(--text-muted);">
+                            <i class="fas fa-user-secret" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <p>Insira um CPF fictício para ver a demonstração</p>
+                        </div>
+                        <div id="cpfContent" class="hidden">
+                            <div class="fake-profile">
+                                <div class="fake-profile-header">
+                                    <div class="fake-avatar">JE</div>
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 1.2rem;" id="cpfNome">João Exemplo</div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted);">Status: <span class="badge badge-med">SIMULAÇÃO</span></div>
+                                    </div>
+                                </div>
+                                <div class="results-grid" style="grid-template-columns: 1fr 1fr;">
+                                    <div class="result-item">
+                                        <div class="label">CPF consultado</div>
+                                        <div class="value sim" id="cpfDisplay">000.000.000-00</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="label">Nome</div>
+                                        <div class="value">João Exemplo</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="label">Cidade</div>
+                                        <div class="value">Cidade Fictícia / UF</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="label">Nascimento</div>
+                                        <div class="value">01/01/2000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="label">Telefone</div>
+                                        <div class="value sim">DADO FICTÍCIO</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="label">E-mail associado</div>
+                                        <div class="value sim">joao.exemplo@email.com</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-danger" style="margin-bottom: 0; margin-top: 0.5rem;">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <div>Em um cenário real, dados como estes poderiam ser usados para fraudes, engenharia social ou roubo de identidade. Proteja seus documentos.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vazamentos">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 03</span>
+                    <h2>Exemplos de Vazamentos</h2>
+                    <p>Casos fictícios que ilustram como dados podem vazar e quais as possíveis consequências.</p>
+                </div>
+
+                <div class="leaks-grid">
+                    <div class="card leak-card">
+                        <div class="leak-platform"><i class="fas fa-store" style="margin-right: 0.4rem;"></i>Plataforma Fictícia A</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Rede social de compras online (simulada)</p>
+                        <div class="leak-meta">
+                            <span><i class="fas fa-database"></i> 2.4 milhões de registros</span>
+                            <span><i class="fas fa-calendar"></i> Março/2023</span>
+                            <span><i class="fas fa-envelope"></i> E-mails + senhas</span>
+                        </div>
+                        <div class="leak-consequences">
+                            <strong>Consequências possíveis:</strong> acesso a contas, spam, tentativas de phishing direcionado e reutilização de senhas em outros serviços.
+                        </div>
+                        <div class="leak-protect">
+                            <strong>Como se proteger:</strong> Use senhas únicas com gerenciador, ative 2FA e monitore se seu e-mail aparece em vazamentos.
+                        </div>
+                    </div>
+
+                    <div class="card leak-card">
+                        <div class="leak-platform"><i class="fas fa-shopping-cart" style="margin-right: 0.4rem;"></i>Loja Fictícia B</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">E-commerce de eletrônicos (simulado)</p>
+                        <div class="leak-meta">
+                            <span><i class="fas fa-database"></i> 890 mil registros</span>
+                            <span><i class="fas fa-calendar"></i> Novembro/2024</span>
+                            <span><i class="fas fa-credit-card"></i> Dados de entrega + e-mail</span>
+                        </div>
+                        <div class="leak-consequences">
+                            <strong>Consequências possíveis:</strong> Engenharia social com base em compras, tentativas de golpe por telefone ou WhatsApp e exposição de endereço residencial.
+                        </div>
+                        <div class="leak-protect">
+                            <strong>Como se proteger:</strong> Evite cadastrar dados desnecessários, use endereços de entrega alternativos quando possível e desconfie de contatos inesperados.
+                        </div>
+                    </div>
+
+                    <div class="card leak-card">
+                        <div class="leak-platform"><i class="fas fa-comments" style="margin-right: 0.4rem;"></i>Fórum Fictício C</div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Comunidade de tecnologia (simulada)</p>
+                        <div class="leak-meta">
+                            <span><i class="fas fa-database"></i> 450 mil registros</span>
+                            <span><i class="fas fa-calendar"></i> Julho/2022</span>
+                            <span><i class="fas fa-user"></i> Usuários + mensagens públicas</span>
+                        </div>
+                        <div class="leak-consequences">
+                            <strong>Consequências possíveis:</strong> Associação de nicknames a identidades reais, doxxing e criação de perfis psicológicos para golpes mais sofisticados.
+                        </div>
+                        <div class="leak-protect">
+                            <strong>Como se proteger:</strong> Não use o mesmo nickname em todos os lugares, evite postar dados pessoais e revise a privacidade das suas contas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ddos" style="background: rgba(0,0,0,0.25);">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 04</span>
+                    <h2>DDoS — Simulação Educativa</h2>
+                    <p>Entenda conceitualmente como funciona um ataque de Negação de Serviço Distribuída. Nenhuma requisição real é enviada.</p>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>DDoS</strong> é um ataque que tenta tornar um serviço indisponível enviando uma quantidade enorme de requisições. <strong>Esta demonstração não envia tráfego para nenhum servidor real.</strong>
+                    </div>
+                </div>
+
+                <div class="ddos-container">
+                    <div class="card ddos-controls">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-sliders-h" style="color: var(--neon-blue); margin-right: 0.5rem;"></i>Controles da Simulação</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Ajuste a quantidade de requisições simuladas e observe o impacto no servidor fictício.</p>
+
+                        <div class="control-group">
+                            <label>
+                                <span>Requisições simuladas /s</span>
+                                <span id="reqValue" style="color: var(--neon-green); font-family: var(--font-mono);">50</span>
+                            </label>
+                            <input type="range" id="reqSlider" min="10" max="1000" value="50" step="10">
+                        </div>
+
+                        <div class="control-group">
+                            <label>
+                                <span>Capacidade do servidor fictício</span>
+                                <span style="color: var(--neon-blue); font-family: var(--font-mono);">300 req/s</span>
+                            </label>
+                            <div class="server-load-bar" style="height: 6px;">
+                                <div style="width: 100%; height: 100%; background: rgba(0,212,255,0.3); border-radius: 3px;"></div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+                            <button class="btn btn-primary" id="startDdos" style="flex: 1;">
+                                <i class="fas fa-play"></i> Iniciar simulação
+                            </button>
+                            <button class="btn btn-secondary" id="stopDdos" style="flex: 1;">
+                                <i class="fas fa-stop"></i> Parar
+                            </button>
+                        </div>
+
+                        <div class="server-box" id="serverBox">
+                            <div class="server-icon"><i class="fas fa-server"></i></div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Servidor de Demonstração</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);" id="serverStatus">Status: Online — Carga normal</div>
+                            <div class="server-load-bar">
+                                <div class="server-load-fill" id="loadFill" style="width: 15%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;" id="loadText">Carga: 15%</div>
+                        </div>
+                    </div>
+
+                    <div class="ddos-viz">
+                        <div class="ddos-status">
+                            <div class="status-badge">
+                                <span class="status-dot"></span>
+                                SIMULAÇÃO ATIVA
+                            </div>
+                            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);" id="ddosTimer">00:00</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="ddosChart"></canvas>
+                        </div>
+                        <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; text-align: center;">
+                            <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Usuários simulados</div>
+                                <div style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--neon-blue);" id="simUsers">0</div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Tráfego atual</div>
+                                <div style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--neon-green);" id="simTraffic">0 req/s</div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 8px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Pacotes perdidos</div>
+                                <div style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--neon-red);" id="simDropped">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="score">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 05</span>
+                    <h2>Score de Exposição</h2>
+                    <p>Visualize um índice fictício de exposição digital baseado em categorias comuns de risco.</p>
+                </div>
+
+                <div class="card">
+                    <div class="score-container">
+                        <div class="score-circle-wrap">
+                            <canvas id="scoreChart"></canvas>
+                            <div class="score-value">
+                                <div class="number" id="scoreNumber" style="color: var(--neon-yellow);">68</div>
+                                <div class="label">Exposição</div>
+                                <div style="margin-top: 0.35rem;"><span class="badge badge-med" id="scoreLabel">ALTA</span></div>
+                            </div>
+                        </div>
+                        <div class="score-bars">
+                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Distribuição por categoria (valores simulados):</p>
+                            <div class="score-bar-item">
+                                <span class="name"><i class="fas fa-user" style="color: var(--neon-blue); margin-right: 0.4rem;"></i>Dados pessoais</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: 75%; background: var(--neon-blue);"></div></div>
+                                <span class="pct">75%</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="name"><i class="fas fa-key" style="color: var(--neon-red); margin-right: 0.4rem;"></i>Senhas</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: 55%; background: var(--neon-red);"></div></div>
+                                <span class="pct">55%</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="name"><i class="fas fa-share-nodes" style="color: var(--neon-cyan); margin-right: 0.4rem;"></i>Redes sociais</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: 82%; background: var(--neon-cyan);"></div></div>
+                                <span class="pct">82%</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="name"><i class="fas fa-envelope" style="color: var(--neon-green); margin-right: 0.4rem;"></i>E-mail</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: 60%; background: var(--neon-green);"></div></div>
+                                <span class="pct">60%</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="name"><i class="fas fa-globe" style="color: var(--neon-orange); margin-right: 0.4rem;"></i>Info. públicas</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: 70%; background: var(--neon-orange);"></div></div>
+                                <span class="pct">70%</span>
+                            </div>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; font-size: 0.85rem; color: var(--text-secondary);">
+                                <strong style="color: var(--text-primary);">Escala:</strong>
+                                0–30 Baixa &nbsp;|&nbsp; 31–60 Moderada &nbsp;|&nbsp; 61–80 Alta &nbsp;|&nbsp; 81–100 Crítica
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proteger" style="background: rgba(0,0,0,0.25);">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 06</span>
+                    <h2>Como se Proteger</h2>
+                    <p>Práticas essenciais para reduzir sua exposição digital no dia a dia.</p>
+                </div>
+
+                <div class="protect-grid">
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-lock"></i></div>
+                        <div>
+                            <h4>Senhas únicas</h4>
+                            <p>Nunca reutilize a mesma senha em vários serviços. Use um gerenciador de senhas confiável.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-mobile-screen"></i></div>
+                        <div>
+                            <h4>Autenticação de dois fatores (2FA)</h4>
+                            <p>Ative 2FA sempre que disponível. Prefira apps autenticadores a SMS.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-file-shield"></i></div>
+                        <div>
+                            <h4>Evite publicar documentos</h4>
+                            <p>Não compartilhe fotos de RG, CPF, comprovantes ou cartões em redes sociais.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-id-card"></i></div>
+                        <div>
+                            <h4>Não compartilhe CPF desnecessariamente</h4>
+                            <p>Questione por que um site ou app pede seu CPF. Forneça apenas quando for realmente necessário.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-sliders"></i></div>
+                        <div>
+                            <h4>Verifique permissões de apps</h4>
+                            <p>Revise periodicamente quais permissões seus aplicativos possuem e remova as desnecessárias.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-fish"></i></div>
+                        <div>
+                            <h4>Cuidado com phishing</h4>
+                            <p>Desconfie de e-mails e mensagens urgentes pedindo dados. Verifique sempre a origem.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-sync"></i></div>
+                        <div>
+                            <h4>Mantenha sistemas atualizados</h4>
+                            <p>Atualize sistema operacional, navegadores e aplicativos. Correções de segurança são críticas.</p>
+                        </div>
+                    </div>
+                    <div class="card protect-card">
+                        <div class="protect-icon"><i class="fas fa-eye"></i></div>
+                        <div>
+                            <h4>Monitore possíveis vazamentos</h4>
+                            <p>Use serviços legítimos de verificação de vazamentos e alerte-se se seus dados aparecerem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="historico">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Módulo 07</span>
+                    <h2>Histórico de Simulações</h2>
+                    <p>Suas análises fictícias salvas na conta (apenas dados de simulação).</p>
+                </div>
+                <div class="card">
+                    <div id="historyList" class="history-list">
+                        <p style="color: var(--text-muted); text-align: center; padding: 2rem;">Carregando histórico...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">// Sobre</span>
+                    <h2>Sobre o Projeto</h2>
+                </div>
+                <div class="about-content">
+                    <p>
+                        O <strong>Cyber Exposure</strong> é um projeto acadêmico de conscientização em cibersegurança. Seu objetivo é demonstrar, de maneira <strong>segura e educativa</strong>, como informações aparentemente inofensivas podem ser combinadas para criar um perfil detalhado de uma pessoa.
+                    </p>
+                    <p>
+                        Todas as consultas, vazamentos, scores e simulações de ataques apresentados neste site são <strong>100% fictícios</strong>. O login serve apenas para salvar o histórico das suas simulações educacionais.
+                    </p>
+                    <p>
+                        Ao entender os riscos de forma prática e visual, esperamos incentivar hábitos mais seguros de privacidade digital.
+                    </p>
+
+                    <div class="about-points">
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-graduation-cap" style="font-size: 1.8rem; color: var(--neon-green); margin-bottom: 0.75rem;"></i>
+                            <h4 style="margin-bottom: 0.4rem;">Educativo</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Criado para fins escolares e de conscientização.</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-shield-halved" style="font-size: 1.8rem; color: var(--neon-blue); margin-bottom: 0.75rem;"></i>
+                            <h4 style="margin-bottom: 0.4rem;">Seguro</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Sem consultas reais de dados pessoais.</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-database" style="font-size: 1.8rem; color: var(--neon-cyan); margin-bottom: 0.75rem;"></i>
+                            <h4 style="margin-bottom: 0.4rem;">Firebase</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Login e histórico salvos de forma segura.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-logo">CYBER EXPOSURE</div>
+            <p>Projeto acadêmico de conscientização em Cybersecurity.</p>
+            <p>Todos os dados e ataques demonstrados neste site são simulados.</p>
+            <div class="disclaimer">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 0.4rem;"></i>
+                Ambiente educacional — Não utilize documentos reais. Não realize consultas de dados pessoais reais. Não execute ataques reais.
+            </div>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, orderBy, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1eDhiykuqxr1BgLCt7W7AKfkKFN_zplA",
+            authDomain: "cyber-15ee2.firebaseapp.com",
+            projectId: "cyber-15ee2",
+            storageBucket: "cyber-15ee2.firebasestorage.app",
+            messagingSenderId: "807502378237",
+            appId: "1:807502378237:web:93a67a27dd39442f78ba94",
+            measurementId: "G-L2E15XJ56B"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginScreen = document.getElementById('loginScreen');
+        const mainApp = document.getElementById('mainApp');
+        const authError = document.getElementById('authError');
+        const authSuccess = document.getElementById('authSuccess');
+
+        function showError(msg) {
+            authError.textContent = msg;
+            authError.classList.add('show');
+            authSuccess.classList.remove('show');
+        }
+
+        function showSuccess(msg) {
+            authSuccess.textContent = msg;
+            authSuccess.classList.add('show');
+            authError.classList.remove('show');
+        }
+
+        function clearMessages() {
+            authError.classList.remove('show');
+            authSuccess.classList.remove('show');
+        }
+
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab === 'login' ? 'loginForm' : 'registerForm').classList.add('active');
+                clearMessages();
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                let msg = 'Erro ao entrar. Tente novamente.';
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                    msg = 'E-mail ou senha incorretos.';
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = 'Muitas tentativas. Aguarde um pouco.';
+                }
+                showError(msg);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
+
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(cred.user, { displayName: name });
+                await addDoc(collection(db, 'users'), {
+                    uid: cred.user.uid,
+                    displayName: name,
+                    email: email,
+                    createdAt: serverTimestamp()
+                });
+                showSuccess('Conta criada com sucesso!');
+            } catch (err) {
+                let msg = 'Erro ao criar conta.';
+                if (err.code === 'auth/email-already-in-use') msg = 'Este e-mail já está em uso.';
+                else if (err.code === 'auth/weak-password') msg = 'Senha muito fraca (mínimo 6 caracteres).';
+                else if (err.code === 'auth/invalid-email') msg = 'E-mail inválido.';
+                showError(msg);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Criar conta';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginScreen.classList.add('hidden');
+                mainApp.classList.add('visible');
+                document.getElementById('userEmailDisplay').textContent = user.displayName || user.email;
+                loadHistory(user.uid);
+                initAppFeatures();
+            } else {
+                loginScreen.classList.remove('hidden');
+                mainApp.classList.remove('visible');
+            }
+        });
+
+        async function saveSimulation(data) {
+            const user = auth.currentUser;
+            if (!user) return;
+            try {
+                await addDoc(collection(db, 'simulations'), {
+                    uid: user.uid,
+                    type: data.type,
+                    input: data.input,
+                    result: data.result,
+                    level: data.level || null,
+                    createdAt: serverTimestamp()
+                });
+                loadHistory(user.uid);
+            } catch (err) {
+                console.error('Erro ao salvar simulação:', err);
+            }
+        }
+
+        async function loadHistory(uid) {
+            const list = document.getElementById('historyList');
+            try {
+                const q = query(
+                    collection(db, 'simulations'),
+                    where('uid', '==', uid),
+                    orderBy('createdAt', 'desc')
+                );
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    list.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Nenhuma simulação salva ainda. Faça uma consulta para começar.</p>';
+                    return;
+                }
+                list.innerHTML = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const date = d.createdAt ? d.createdAt.toDate().toLocaleString('pt-BR') : '—';
+                    const levelBadge = d.level ? `<span class="badge ${d.level === 'BAIXO' ? 'badge-low' : d.level === 'MÉDIO' ? 'badge-med' : 'badge-high'}">${d.level}</span>` : '';
+                    list.innerHTML += `
+                        <div class="history-item">
+                            <div>
+                                <strong style="color: var(--neon-green);">${d.type}</strong>
+                                <div class="meta">${d.input || ''} ${levelBadge}</div>
+                            </div>
+                            <div class="meta">${date}</div>
+                        </div>`;
+                });
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Não foi possível carregar o histórico. Verifique as regras do Firestore e se o índice composto foi criado.</p>';
+            }
+        }
+
+        let appInitialized = false;
+        function initAppFeatures() {
+            if (appInitialized) return;
+            appInitialized = true;
+
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('open'));
+            });
+
+            document.getElementById('consultaForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nome = document.getElementById('nome').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const usuario = document.getElementById('usuario').value.trim() || 'usuario_exemplo';
+                const dominio = document.getElementById('dominio').value.trim();
+
+                const levels = ['BAIXO', 'MÉDIO', 'ALTO'];
+                const level = levels[Math.floor(Math.random() * 3)];
+                const badgeClass = level === 'BAIXO' ? 'badge-low' : level === 'MÉDIO' ? 'badge-med' : 'badge-high';
+
+                const results = [
+                    { label: 'E-mail em vazamento', value: 'SIMULAÇÃO — encontrado em base fictícia', sim: true },
+                    { label: 'Senha reutilizada', value: 'SIMULAÇÃO', sim: true },
+                    { label: 'Telefone associado', value: 'DADO FICTÍCIO', sim: true },
+                    { label: 'Redes sociais públicas', value: 'SIMULAÇÃO — 2-4 perfis potenciais', sim: true },
+                    { label: 'Nome consultado', value: nome, sim: false },
+                    { label: 'Usuário', value: usuario, sim: false },
+                    { label: 'Domínio', value: dominio || 'Não informado', sim: false },
+                    { label: 'Grau de exposição', value: level, sim: false, isBadge: true }
+                ];
+
+                document.getElementById('resultsPlaceholder').classList.add('hidden');
+                document.getElementById('resultsContent').classList.remove('hidden');
+                document.getElementById('resultsContent').classList.add('fade-in');
+
+                const badge = document.getElementById('exposureBadge');
+                badge.textContent = level;
+                badge.className = 'badge ' + badgeClass;
+
+                const grid = document.getElementById('resultsGrid');
+                grid.innerHTML = results.map(r => {
+                    if (r.isBadge) {
+                        return `<div class="result-item"><div class="label">${r.label}</div><div class="value"><span class="badge ${badgeClass}">${r.value}</span></div></div>`;
+                    }
+                    return `<div class="result-item"><div class="label">${r.label}</div><div class="value ${r.sim ? 'sim' : ''}">${r.value}</div></div>`;
+                }).join('');
+
+                await saveSimulation({
+                    type: 'Consulta de Exposição',
+                    input: `${nome} / ${email}`,
+                    result: 'Simulação executada',
+                    level: level
+                });
+            });
+
+            const cpfInput = document.getElementById('cpfInput');
+            cpfInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                e.target.value = v;
+            });
+
+            document.getElementById('cpfForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const cpf = cpfInput.value.trim();
+                const digits = cpf.replace(/\D/g, '');
+                const isFictional = digits === '00000000000' || digits === '11111111111' || digits === '12345678900' || digits.startsWith('000') || /^(\d)\1{10}$/.test(digits);
+
+                if (!isFictional && digits.length === 11) {
+                    alert('⚠️ Por segurança educacional, só aceitamos CPFs claramente fictícios (ex: 000.000.000-00).\n\nNão utilize documentos reais.');
+                    return;
+                }
+                if (digits.length < 11) {
+                    alert('Digite um CPF fictício completo no formato 000.000.000-00');
+                    return;
+                }
+
+                document.getElementById('cpfPlaceholder').classList.add('hidden');
+                document.getElementById('cpfContent').classList.remove('hidden');
+                document.getElementById('cpfContent').classList.add('fade-in');
+                document.getElementById('cpfDisplay').textContent = cpf;
+
+                await saveSimulation({
+                    type: 'CPF Demonstração',
+                    input: cpf,
+                    result: 'SIMULAÇÃO — João Exemplo',
+                    level: null
+                });
+            });
+
+            let ddosInterval = null;
+            let ddosSeconds = 0;
+            const maxPoints = 20;
+            let trafficData = Array(maxPoints).fill(0);
+            let labels = Array(maxPoints).fill('');
+
+            const ctx = document.getElementById('ddosChart').getContext('2d');
+            const ddosChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Requisições simuladas/s',
+                        data: trafficData,
+                        borderColor: '#00ff9d',
+                        backgroundColor: 'rgba(0, 255, 157, 0.1)',
+                        fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2
+                    }, {
+                        label: 'Capacidade do servidor',
+                        data: Array(maxPoints).fill(300),
+                        borderColor: '#00d4ff', borderDash: [5, 5],
+                        fill: false, pointRadius: 0, borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    animation: { duration: 0 },
+                    scales: {
+                        x: { display: false },
+                        y: { beginAtZero: true, max: 1200, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 10 } } }
+                    },
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } }
+                }
+            });
+
+            const reqSlider = document.getElementById('reqSlider');
+            document.getElementById('reqValue').textContent = reqSlider.value;
+            reqSlider.addEventListener('input', () => {
+                document.getElementById('reqValue').textContent = reqSlider.value;
+            });
+
+            document.getElementById('startDdos').addEventListener('click', () => {
+                if (ddosInterval) return;
+                ddosSeconds = 0;
+                ddosInterval = setInterval(() => {
+                    ddosSeconds++;
+                    const base = parseInt(reqSlider.value);
+                    const noise = Math.floor(Math.random() * (base * 0.2));
+                    const current = base + noise;
+
+                    trafficData.shift(); trafficData.push(current);
+                    labels.shift(); labels.push(ddosSeconds + 's');
+                    ddosChart.data.labels = labels;
+                    ddosChart.data.datasets[0].data = trafficData;
+                    ddosChart.update();
+
+                    document.getElementById('simUsers').textContent = Math.floor(current / 2.5);
+                    document.getElementById('simTraffic').textContent = current + ' req/s';
+                    const loadPct = Math.min(100, Math.round((current / 300) * 100));
+                    document.getElementById('loadFill').style.width = loadPct + '%';
+                    document.getElementById('loadText').textContent = 'Carga: ' + loadPct + '%';
+
+                    const serverBox = document.getElementById('serverBox');
+                    const statusEl = document.getElementById('serverStatus');
+                    let dropped = 0;
+                    if (current > 300) {
+                        serverBox.classList.add('overloaded');
+                        statusEl.textContent = 'Status: SOBRECARREGADO — Serviço degradado';
+                        dropped = Math.min(95, Math.round(((current - 300) / current) * 100));
+                    } else if (current > 200) {
+                        serverBox.classList.remove('overloaded');
+                        statusEl.textContent = 'Status: Carga elevada';
+                        dropped = Math.round(((current - 200) / current) * 15);
+                    } else {
+                        serverBox.classList.remove('overloaded');
+                        statusEl.textContent = 'Status: Online — Carga normal';
+                    }
+                    document.getElementById('simDropped').textContent = dropped + '%';
+                    const mins = String(Math.floor(ddosSeconds / 60)).padStart(2, '0');
+                    const secs = String(ddosSeconds % 60).padStart(2, '0');
+                    document.getElementById('ddosTimer').textContent = mins + ':' + secs;
+                }, 800);
+            });
+
+            document.getElementById('stopDdos').addEventListener('click', () => {
+                if (ddosInterval) { clearInterval(ddosInterval); ddosInterval = null; }
+                document.getElementById('serverBox').classList.remove('overloaded');
+                document.getElementById('serverStatus').textContent = 'Status: Online — Simulação parada';
+                document.getElementById('loadFill').style.width = '15%';
+                document.getElementById('loadText').textContent = 'Carga: 15%';
+                document.getElementById('simDropped').textContent = '0%';
+            });
+
+            const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+            new Chart(scoreCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: ['#facc15', 'rgba(255,255,255,0.06)'],
+                        borderWidth: 0, cutout: '78%'
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: true,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
+
+            const sections = document.querySelectorAll('section[id]');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.pageYOffset;
+                sections.forEach(sec => {
+                    const top = sec.offsetTop - 100;
+                    const height = sec.offsetHeight;
+                    const id = sec.getAttribute('id');
+                    if (scrollY >= top && scrollY < top + height) {
+                        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+                        const active = document.querySelector(`.nav-links a[href="#${id}"]`);
+                        if (active) active.classList.add('active');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
