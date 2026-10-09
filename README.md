@@ -18,7 +18,6 @@ A ideia do projeto surgiu para resolver um problema comum: muitas pessoas não e
 
 No site, o usuário consegue simular consultas, visualizar exemplos de vazamentos, “comprar” pacotes de dados fictícios, capturar credenciais (de forma controlada) e entender o impacto de um ataque DDoS. Tudo isso de forma visual e interativa, com dados 100% fictícios.
 
-As informações de login, registro e captura de credenciais são salvas no **Firebase Firestore**, permitindo que o professor e os alunos visualizem os dados coletados durante as demonstrações.
 
 ---
 
