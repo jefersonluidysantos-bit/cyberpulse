@@ -48,14 +48,14 @@ O sistema permite que o usuário:
 * Consulta de exposição de dados (simulada)
 * Demonstração de consulta de CPF
 * Simulação de venda de dados (CPF, placa + CNH e localização)
-* Captura de credenciais (dados salvos no Firestore)
+* Captura de credenciais 
 * Exemplos educativos de vazamentos
 * Simulação interativa de ataque DDoS
 * Score de exposição digital com gráfico
 * Seção de dicas de proteção
 * Interface moderna com visual cyber/neon
 * Design responsivo (mobile e desktop)
-* Armazenamento de usuários e capturas no Firebase Firestore
+
 
 ---
 
@@ -64,10 +64,10 @@ O sistema permite que o usuário:
 ### Front-End
 * HTML5
 * CSS3
-* JavaScript (Vanilla)
+* JavaScript 
 
 ### Estilização
-* CSS customizado (Glassmorphism + Neon)
+* CSS customizado 
 * Font Awesome
 * Google Fonts (Orbitron, Share Tech Mono, Inter)
 
@@ -78,7 +78,7 @@ O sistema permite que o usuário:
 * Firebase Authentication
 * Firebase Firestore
 
-### Hospedagem (recomendada)
+### Hospedagem 
 * Firebase Hosting / GitHub Pages / Netlify
 
 ---
@@ -88,7 +88,7 @@ O sistema permite que o usuário:
 ```text
 Cyber-Exposure/
 │
-├── index.html          # Aplicação principal (tudo em um único arquivo)
+├── index.html          # Aplicação principal 
 ├── README.md
 │
 └── (opcional)
@@ -97,7 +97,7 @@ Cyber-Exposure/
 
 
 🗄 Banco de Dados
-O projeto utiliza o Firebase Firestore (NoSQL) para armazenar os dados.
+O projeto utiliza o Firebase Firestore para armazenar os dados.
 Coleções criadas:
 usuarios
 
@@ -122,7 +122,7 @@ Após autenticado, tem acesso a todas as seções do site.
 Pode simular consultas de exposição, CPF e venda de dados.
 Pode testar a captura de credenciais.
 Pode interagir com a simulação de DDoS e visualizar o score de exposição.
-Todas as ações de autenticação e captura ficam registradas no Firebase para análise pedagógica.
+
 
 🚧 Melhorias futuras
 Pretendemos adicionar novas funcionalidades, como:
