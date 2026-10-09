@@ -38,7 +38,6 @@ O sistema permite que o usuário:
 * ver um score de exposição digital;
 * aprender boas práticas de proteção.
 
-Enquanto isso, os dados de autenticação e capturas ficam organizados no Firebase, facilitando a análise pedagógica do que foi demonstrado.
 
 ---
 
